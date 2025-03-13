@@ -1,4 +1,4 @@
-# COWRITY - V0.0.1
+# COWRITY - V0.0.2
 
 ![alt text](logo.png)
 
@@ -32,4 +32,20 @@ Built with next-gen technologies:
 
 ## 🚀 WHERE COLLABORATION MEETS INNOVATION 🚀
 
-_Cowrity. The steaks are high, but our docs are well-done._ 🥩
+<div align="center">
+  <em>Cowrity. The steaks are high, but our docs are well-done.</em> 🥩
+</div>
+
+## 📸 SHOWCASE 📸
+
+<div align="center">
+  <img src="image-1.png" width="700" alt="Cowrity in action">
+  <p><em>Real-time collaborative editing with integrated chat</em></p>
+</div>
+
+<div align="center">
+
+  <a href="https://github.com/Trisogene/cowrity">
+    <img src="https://img.shields.io/badge/View_Source-181717?style=for-the-badge&logo=github&logoColor=white" alt="View Source">
+  </a>
+</div>
