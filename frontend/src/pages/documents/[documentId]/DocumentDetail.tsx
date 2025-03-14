@@ -16,6 +16,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Textarea } from "@/components/ui/textarea";
+import { MOCK_DOCUMENTS } from "@/pages/Dashboard/DashboardDocuments/DashboardDocumentsGrid/DashboardDocumentsGrid.mock";
 
 interface Message {
   text: string;
@@ -34,7 +35,7 @@ interface Delta {
   position?: number;
 }
 
-const Room = () => {
+const DocumentDetail = () => {
   const { sectionId } = useParams<{ sectionId: string }>();
   const [socket, setSocket] = useState<Socket | null>(null);
   const [connected, setConnected] = useState(false);
@@ -206,6 +207,10 @@ const Room = () => {
     return name.substring(0, 2).toUpperCase();
   };
 
+  const documentName = MOCK_DOCUMENTS.find(
+    (doc) => doc.id === sectionId
+  )?.title;
+
   if (!isJoined) {
     return (
       <div className="flex items-center justify-center h-screen bg-background p-4">
@@ -216,7 +221,7 @@ const Room = () => {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <h2 className="text-xl text-center mb-6">Room: {sectionId}</h2>
+            <h2 className="text-xl text-center mb-6">{documentName}</h2>
             <form onSubmit={handleJoinRoom} className="space-y-4">
               <Input
                 type="text"
@@ -245,7 +250,7 @@ const Room = () => {
       {/* Header */}
       <div className=" border rounded p-4 flex items-center justify-between bg-card">
         <div className="flex items-center gap-2">
-          <h3 className="text-xl font-semibold">{sectionId}</h3>
+          <h3 className="text-xl font-semibold">{documentName}</h3>
         </div>
         <div className="flex items-center gap-2">
           <div
@@ -364,4 +369,4 @@ const Room = () => {
   );
 };
 
-export default Room;
+export default DocumentDetail;
