@@ -10,7 +10,7 @@ const initialState: DashboardSlice = {
 };
 
 export const dashboardSlice = createSlice({
-  name: "counter",
+  name: "dashboard",
   initialState,
   reducers: {
     setDashboardSearch: (state, action: PayloadAction<string>) => {
@@ -19,7 +19,6 @@ export const dashboardSlice = createSlice({
   },
 });
 
-// Action creators are generated for each case reducer function
 export const { setDashboardSearch } = dashboardSlice.actions;
 
 export default dashboardSlice.reducer;

@@ -48,19 +48,19 @@ export function initSockets(io: Server) {
       console.log(`User ${username} joined room ${roomId}`);
     });
 
-    // Handle text changes
-    socket.on("text-change", ({ delta, roomId }) => {
-      const roomData = rooms.get(roomId);
-      if (roomData) {
-        // Update the content with the change
-        roomData.content = applyDelta(roomData.content, delta);
+    socket.on("text-change", ({ content, roomId }) => {
+      // Get room
+      const room = rooms.get(roomId);
+      if (!room) return;
 
-        // Broadcast to everyone except sender
-        socket.to(roomId).emit("text-change", {
-          delta,
-          sender: socket.id,
-        });
-      }
+      // Instead of applying delta, just update the entire content
+      room.content = content;
+
+      // Broadcast to other clients
+      socket.to(roomId).emit("text-change", {
+        content,
+        sender: socket.id,
+      });
     });
 
     // Handle chat messages
