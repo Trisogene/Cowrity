@@ -6,13 +6,13 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { MOCK_DOCUMENTS } from "./DashboardDocumentsGrid.mock";
 import { useRtk } from "@/lib/rtk/store";
 
 const useDashboardDocumentsGrid = () => {
   const [roomId, setRoomId] = useState("");
   const navigate = useNavigate();
   const searchQuery = useRtk((state) => state.dashboard.search);
+  const documents = useRtk((state) => state.dashboard.documents);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,7 +36,7 @@ const useDashboardDocumentsGrid = () => {
     }
   };
 
-  const filteredDocuments = MOCK_DOCUMENTS.filter(
+  const filteredDocuments = documents.filter(
     (doc) =>
       doc.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       doc.type.toLowerCase().includes(searchQuery.toLowerCase())

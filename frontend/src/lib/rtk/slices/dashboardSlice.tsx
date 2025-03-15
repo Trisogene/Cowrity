@@ -1,12 +1,15 @@
+import { Document } from "@/lib/axios/services/documentServices/documentServices.d";
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 
 type DashboardSlice = {
   search: string;
+  documents: Document[];
 };
 
 const initialState: DashboardSlice = {
   search: "",
+  documents: [],
 };
 
 export const dashboardSlice = createSlice({
@@ -16,9 +19,12 @@ export const dashboardSlice = createSlice({
     setDashboardSearch: (state, action: PayloadAction<string>) => {
       state.search = action.payload;
     },
+    setDocuments: (state, action: PayloadAction<Document[]>) => {
+      state.documents = action.payload;
+    },
   },
 });
 
-export const { setDashboardSearch } = dashboardSlice.actions;
+export const { setDashboardSearch, setDocuments } = dashboardSlice.actions;
 
 export default dashboardSlice.reducer;

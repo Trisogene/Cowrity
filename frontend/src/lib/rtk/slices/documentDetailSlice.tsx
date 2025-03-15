@@ -10,6 +10,7 @@ type DocumentDetailSlice = {
   hasJoinedRoom: boolean;
   users: User[];
   username: string;
+  editorContent: string;
 };
 
 const initialState: DocumentDetailSlice = {
@@ -17,6 +18,7 @@ const initialState: DocumentDetailSlice = {
   users: [],
   hasJoinedRoom: false,
   username: "",
+  editorContent: "",
 };
 
 export const documentDetailSlice = createSlice({
@@ -35,10 +37,18 @@ export const documentDetailSlice = createSlice({
     setUsername: (state, action) => {
       state.username = action.payload;
     },
+    setEditorContent: (state, action) => {
+      state.editorContent = action.payload;
+    },
   },
 });
 
-export const { setIsSocketConnected, setUsers, setHasJoinedRoom, setUsername } =
-  documentDetailSlice.actions;
+export const {
+  setIsSocketConnected,
+  setUsers,
+  setHasJoinedRoom,
+  setUsername,
+  setEditorContent,
+} = documentDetailSlice.actions;
 
 export default documentDetailSlice.reducer;

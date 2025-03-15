@@ -31,3 +31,29 @@
 .tiptap .ProseMirror > * + * {
   margin-top: 0.75em;
 }
+
+/* Add to your CSS file */
+.ProseMirror ul {
+  list-style-type: disc;
+  padding-left: 1.5em;
+  margin: 0.5em 0;
+}
+
+.ProseMirror ul li {
+  margin: 0.2em 0;
+  position: relative;
+}
+
+.ProseMirror ul li p {
+  margin: 0;
+}
+
+/* For nested lists */
+.ProseMirror ul ul {
+  list-style-type: square;
+  padding-left: 1.5em;
+}
+
+.ProseMirror ul ul ul {
+  list-style-type: square;
+}
