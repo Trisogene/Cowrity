@@ -7,12 +7,16 @@ interface User {
 
 type DocumentDetailSlice = {
   isSocketConnected: boolean;
+  hasJoinedRoom: boolean;
   users: User[];
+  username: string;
 };
 
 const initialState: DocumentDetailSlice = {
   isSocketConnected: false,
   users: [],
+  hasJoinedRoom: false,
+  username: "",
 };
 
 export const documentDetailSlice = createSlice({
@@ -22,13 +26,19 @@ export const documentDetailSlice = createSlice({
     setIsSocketConnected: (state, action) => {
       state.isSocketConnected = action.payload;
     },
-    setDocumentDetailUsers: (state, action) => {
+    setUsers: (state, action) => {
       state.users = action.payload;
+    },
+    setHasJoinedRoom: (state, action) => {
+      state.hasJoinedRoom = action.payload;
+    },
+    setUsername: (state, action) => {
+      state.username = action.payload;
     },
   },
 });
 
-export const { setIsSocketConnected, setDocumentDetailUsers } =
+export const { setIsSocketConnected, setUsers, setHasJoinedRoom, setUsername } =
   documentDetailSlice.actions;
 
 export default documentDetailSlice.reducer;
