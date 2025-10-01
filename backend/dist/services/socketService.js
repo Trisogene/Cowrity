@@ -8,48 +8,71 @@ const userSockets = new Map();
 function initSockets(io) {
     io.on("connection", (socket) => {
         console.log(`User connected: ${socket.id}`);
-        // Handle room joining
         socket.on("join-room", ({ roomId, username }) => {
-            // Leave previous rooms
             Array.from(socket.rooms).forEach((room) => {
                 if (room !== socket.id)
                     socket.leave(room);
             });
-            // Join the new room
             socket.join(roomId);
-            // Initialize room if it doesn't exist
             if (!rooms.has(roomId)) {
                 rooms.set(roomId, {
                     content: "",
                     users: [],
                 });
             }
-            // Add user to room
             const roomData = rooms.get(roomId);
             const userInfo = { id: socket.id, username };
             roomData.users.push(userInfo);
-            // Store user info
             userSockets.set(socket.id, { roomId, username });
-            // Send current content to the user
             socket.emit("document-state", { content: roomData.content });
-            // Notify everyone about the new user
             io.to(roomId).emit("user-joined", {
                 users: roomData.users,
                 joinedUser: userInfo,
             });
             console.log(`User ${username} joined room ${roomId}`);
         });
-        // Handle text changes
-        socket.on("text-change", ({ delta, roomId }) => {
-            const roomData = rooms.get(roomId);
-            if (roomData) {
-                // Update the content with the change
-                roomData.content = applyDelta(roomData.content, delta);
-                // Broadcast to everyone except sender
+        // In socketService.ts
+        socket.on("text-change", ({ content, delta, roomId }) => {
+            const room = rooms.get(roomId);
+            if (!room)
+                return;
+            // Track if we need to update our content
+            let contentUpdated = false;
+            // Handle delta updates (preferred for real-time collaboration)
+            if (delta !== undefined) {
+                try {
+                    // Apply delta to server's version of the document
+                    room.content = applyDelta(room.content, delta);
+                    contentUpdated = true;
+                    // Broadcast delta to other clients for efficiency
+                    socket.to(roomId).emit("text-change", {
+                        delta,
+                        sender: socket.id,
+                    });
+                    console.log(`Updated room ${roomId} content via delta. Content length: ${room.content.length}`);
+                }
+                catch (error) {
+                    console.error("Error applying delta:", error);
+                }
+            }
+            // Handle full content updates (fallback and for occasional syncing)
+            else if (content !== undefined) {
+                room.content = content;
+                contentUpdated = true;
+                // Broadcast to other clients
                 socket.to(roomId).emit("text-change", {
-                    delta,
+                    content,
                     sender: socket.id,
                 });
+                console.log(`Updated room ${roomId} content via full update. Content length: ${content.length}`);
+            }
+            // Periodically (every 10 updates) broadcast full state to all clients to prevent drift
+            if (contentUpdated && Math.random() < 0.1) {
+                // 10% chance on each update
+                setTimeout(() => {
+                    io.to(roomId).emit("document-state", { content: room.content });
+                    console.log(`Broadcast full document state to room ${roomId} to prevent drift`);
+                }, 100); // Small delay to let the current update propagate first
             }
         });
         // Handle chat messages
@@ -91,8 +114,6 @@ function initSockets(io) {
 }
 // Helper function to apply text changes
 function applyDelta(content, delta) {
-    // This is a simplified version. In a real app, you might use a more robust
-    // algorithm or a library like operational-transform or yjs
     if (delta.insert !== undefined) {
         const pos = delta.position || content.length;
         return content.substring(0, pos) + delta.insert + content.substring(pos);
