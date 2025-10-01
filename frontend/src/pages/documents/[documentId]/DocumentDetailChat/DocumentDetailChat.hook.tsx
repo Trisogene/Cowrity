@@ -16,7 +16,7 @@ const useDocumentDetailChat = () => {
   const isSocketConnected = useRtk(
     (state) => state.documentDetail.isSocketConnected
   );
-  const [username, setUsername] = useState("");
+  const [username] = useState("");
   const users = useRtk((state) => state.documentDetail.users);
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState("");
