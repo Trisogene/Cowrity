@@ -42,7 +42,7 @@ const useDocumentDetailEditor = () => {
       const newContent = editor.getHTML();
 
       // Calculate delta from transaction if possible
-      let delta: Delta | undefined = undefined;
+      const delta: Delta | undefined = undefined;
       try {
         if (transaction.steps.length > 0) {
           // For now we'll use full content, but in a real implementation
@@ -93,21 +93,23 @@ const useDocumentDetailEditor = () => {
       try {
         // Handle receiving full content
         if (data.content) {
-          editor?.commands.setContent(data.content, false);
+          editor?.commands.setContent(data.content, { emitUpdate: false });
           dispatch(setEditorContent(data.content));
         }
         // Handle receiving delta
         else if (data.delta) {
           const newContent = applyDelta(content, data.delta);
-          editor?.commands.setContent(newContent, false);
+          editor?.commands.setContent(newContent, { emitUpdate: false });
           dispatch(setEditorContent(newContent));
         }
-      } catch (error) {}
+      } catch {
+        // Silently handle errors
+      }
     }
   };
   const onServerGetDocument = (data: { content: string }) => {
     if (data.content) {
-      editor?.commands.setContent(data.content, false);
+      editor?.commands.setContent(data.content, { emitUpdate: false });
       dispatch(setEditorContent(data.content));
     }
   };
